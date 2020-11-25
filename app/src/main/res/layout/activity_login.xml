@@ -29,12 +29,12 @@
         android:layout_marginTop="112dp"
         android:layout_marginEnd="10dp"
         android:ems="10"
-        android:hint="Email"
-        android:importantForAutofill="no"
         android:inputType="textPersonName"
+        android:text="@string/name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        android:importantForAutofill="no" />
 
     <EditText
         android:id="@+id/editTextTextPassword"
@@ -43,13 +43,12 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="55dp"
         android:layout_marginEnd="10dp"
-        android:autofillHints=""
         android:ems="10"
-        android:hint="password"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName"
+        android:autofillHints="" />
 
     <Button
         android:id="@+id/button"
@@ -59,8 +58,6 @@
         android:layout_marginTop="75dp"
         android:layout_marginEnd="10dp"
         android:text="@string/login"
-        android:background="@color/colorAccent"
-        android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
