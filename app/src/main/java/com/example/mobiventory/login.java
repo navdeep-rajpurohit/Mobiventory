@@ -20,13 +20,16 @@ public class login extends AppCompatActivity {
 
     public void dashboardact(View view) {
         Intent intent = new Intent(this, dashboard.class);
-        if(username.getText().toString().equals("admin") && password.getText().toString().equals("admin")){
-            startActivity(intent);
-        }
-        else
-        {
-
-        }
+         startActivity(intent);
+//        if(username.getText().toString().equals("admin") && password.getText().toString().equals("admin")){
+//            Intent intent = new Intent(this, dashboard.class);
+//            startActivity(intent);
+//
+//        }
+//        else
+//        {
+//
+//        }
     }
 
 }
