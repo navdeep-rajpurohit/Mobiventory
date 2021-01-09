@@ -4,14 +4,20 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.util.List;
+
 public class add_product extends AppCompatActivity {
-    EditText pname, pid, quantity, cost_price, sell_price;
+    EditText pname, mname, quantity, cost_price, sell_price;
     Button Add;
-    DB1Helper DB;
+    DBHelper DB;
+    Spinner category;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,24 +25,29 @@ public class add_product extends AppCompatActivity {
         setContentView(R.layout.activity_add_product);
 
         pname =findViewById(R.id.pname);
-        pid =findViewById(R.id.pid);
+        mname =findViewById(R.id.mname);
         quantity =findViewById(R.id.quantity);
         cost_price =findViewById(R.id.cost_price);
         sell_price =findViewById(R.id.sell_price);
-
+        category = findViewById(R.id.categoryDD);
         Add=findViewById(R.id.Add);
-        DB = new DB1Helper(this);
+        DB = new DBHelper(this);
+
+        //category.setOnItemSelectedListener(this);
+
+       // loadSpinnerData();
+
 
         Add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String pnameTXT =pname.getText().toString();
-                String pidTXT =pid.getText().toString();
+                String mnameTXT =mname.getText().toString();
                 String quantityTXT =quantity.getText().toString();
                 String cost_priceTXT =cost_price.getText().toString();
                 String sell_priceTXT =sell_price.getText().toString();
 
-                Boolean checkaddproduct = DB.addproduct(pnameTXT, pidTXT,quantityTXT,cost_priceTXT,sell_priceTXT);
+                Boolean checkaddproduct = DB.addproduct(pnameTXT, mnameTXT,quantityTXT,cost_priceTXT,sell_priceTXT);
                 if (checkaddproduct==true)
                     Toast.makeText(add_product.this, "New Product Added", Toast.LENGTH_SHORT).show();
                 else
@@ -47,6 +58,27 @@ public class add_product extends AppCompatActivity {
 
             }
         });
-
+        
     }
+
+//    private void loadSpinnerData() {
+//        // database handler
+//      //  DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+//
+//        // Spinner Drop down elements
+//        List<String> lables = DB.getAllLabels();
+//
+//        // Creating adapter for spinner
+//        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+//                android.R.layout.simple_spinner_item, lables);
+//
+//        // Drop down layout style - list view with radio button
+//        dataAdapter
+//                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//
+//        // attaching data adapter to spinner
+//        category.setAdapter(dataAdapter);
+//    }
+
+
 }

@@ -1,11 +1,15 @@
 package com.example.mobiventory;
 
-import android.content.ContentValues;
+import      android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DBHelper extends SQLiteOpenHelper {
     public DBHelper(Context context) {
@@ -16,7 +20,7 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase DB) {
         DB.execSQL("create table Catagory(catagory TEXT)");
-        DB.execSQL("create table Product(pname TEXT primary key, pid TEXT,quantity TEXT ,cost_price TEXT,sell_price TEXT)");
+        DB.execSQL("create table Product(pname TEXT primary key, mname TEXT,quantity TEXT ,cost_price TEXT,sell_price TEXT)");
     }
 
     @Override
@@ -40,12 +44,12 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    public Boolean addproduct(String pname, String pid, String quantity, String cost_price, String sell_price)
+    public Boolean addproduct(String pname, String mname, String quantity, String cost_price, String sell_price)
     {
         SQLiteDatabase DB = this.getWritableDatabase();
         ContentValues contentValues= new ContentValues();
         contentValues.put("pname",pname);
-        contentValues.put("pid",pid);
+        contentValues.put("mname",mname);
         contentValues.put("quantity",quantity);
         contentValues.put("cost_price",cost_price);
         contentValues.put("sell_price",sell_price);
@@ -57,5 +61,30 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
 
+    }
+
+
+    public List<String> getAllLabels(){
+        List<String> labels = new ArrayList<String>();
+
+        // Select All Query
+        String selectQuery = "SELECT  * FROM Catagory";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+            Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                labels.add(cursor.getString(1));
+            } while (cursor.moveToNext());
+        }
+
+        // closing connection
+        cursor.close();
+        db.close();
+
+        // returning lables
+        return labels;
     }
 }
