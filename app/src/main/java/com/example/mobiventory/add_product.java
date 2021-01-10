@@ -46,8 +46,8 @@ public class add_product extends AppCompatActivity {
                 String quantityTXT =quantity.getText().toString();
                 String cost_priceTXT =cost_price.getText().toString();
                 String sell_priceTXT =sell_price.getText().toString();
-
-                Boolean checkaddproduct = DB.addproduct(pnameTXT, mnameTXT,quantityTXT,cost_priceTXT,sell_priceTXT);
+                String category_TXT = category.getSelectedItem().toString();
+                Boolean checkaddproduct = DB.addproduct(pnameTXT, mnameTXT,quantityTXT,cost_priceTXT,sell_priceTXT,category_TXT);
                 if (checkaddproduct==true)
                     Toast.makeText(add_product.this, "New Product Added", Toast.LENGTH_SHORT).show();
                 else
@@ -66,7 +66,7 @@ public class add_product extends AppCompatActivity {
         DBHelper db = new DBHelper (getApplicationContext());
 
         // Spinner Drop down elements
-        List<String> projects = db.getAllProjects();
+        List<String> projects = db.getAllCategory();
 
         // Creating adapter for spinner
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,

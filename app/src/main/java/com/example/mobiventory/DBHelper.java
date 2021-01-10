@@ -22,13 +22,15 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase DB) {
         DB.execSQL("create table Catagory(name TEXT)");
-        DB.execSQL("create table Product(pname TEXT primary key, mname TEXT,quantity TEXT ,cost_price TEXT,sell_price TEXT)");
+        DB.execSQL("create table Product(pname TEXT primary key, mname TEXT,quantity TEXT ,cost_price TEXT,sell_price TEXT,category TEXT)");
+        DB.execSQL("create table Sales(cname TEXT,product TEXT,price TEXT,cPrice TEXT)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase DB, int i, int i1) {
         DB.execSQL("drop table if exists Catagory");
         DB.execSQL("drop table if exists Product");
+        DB.execSQL("drop table if exists Sales");
 
     }
 
@@ -46,24 +48,40 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    public Boolean addproduct(String pname, String mname, String quantity, String cost_price, String sell_price)
-    {
+    public Boolean addproduct(String pname, String mname, String quantity, String cost_price, String sell_price,String category) {
         SQLiteDatabase DB = this.getWritableDatabase();
-        ContentValues contentValues= new ContentValues();
-        contentValues.put("pname",pname);
-        contentValues.put("mname",mname);
-        contentValues.put("quantity",quantity);
-        contentValues.put("cost_price",cost_price);
-        contentValues.put("sell_price",sell_price);
-        long result=DB.insert("Product",null,contentValues);
-        if (result==-1){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("pname", pname);
+        contentValues.put("mname", mname);
+        contentValues.put("quantity", quantity);
+        contentValues.put("cost_price", cost_price);
+        contentValues.put("sell_price", sell_price);
+        contentValues.put("category", category);
+        long result = DB.insert("Product", null, contentValues);
+        if (result == -1) {
             return false;
-        }else {
+        } else {
             return true;
         }
-
-
     }
+        public Boolean addsales(String cname, String price,String cPrice, String product)
+        {
+            SQLiteDatabase DB = this.getWritableDatabase();
+            ContentValues contentValues= new ContentValues();
+            contentValues.put("cname",cname);
+            contentValues.put("price",price);
+            contentValues.put("cPrice",cPrice);
+            contentValues.put("product",product);
+            long result=DB.insert("Sales",null,contentValues);
+            if (result==-1){
+                return false;
+            }else {
+                return true;
+            }
+
+
+
+        }
 
     public Cursor viewProduct() {
         SQLiteDatabase DB = this.getReadableDatabase();
@@ -72,7 +90,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public List<String> getAllProjects(){
+    public List<String> getAllCategory(){
         List<String> projects = new ArrayList<String>();
 
         String selectQuery = "SELECT * FROM Catagory";
@@ -92,6 +110,80 @@ public class DBHelper extends SQLiteOpenHelper {
         // returning lables
         return projects;
     }
+
+    public List<String> getAllProducts(){
+        List<String> products = new ArrayList<String>();
+
+        String selectQuery = "SELECT * FROM Product";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery,null);
+        if (cursor.moveToFirst()) {
+            do {
+                products.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+
+        // closing connection
+        cursor.close();
+        db.close();
+
+        // returning lables
+        return products;
+    }
+
+
+    public int[] profitloss(){
+        int[] total = new int[2];
+        SQLiteDatabase DB = this.getReadableDatabase();
+
+        Cursor cursor1 = DB.rawQuery(
+                "SELECT SUM(price) as Total FROM Sales", null);
+
+        if (cursor1.moveToFirst()) {
+
+            total[0] = cursor1.getInt(cursor1.getColumnIndex("Total"));
+
+        }
+
+        Cursor cursor2 = DB.rawQuery(
+                "SELECT SUM(cPrice) as Total FROM Sales", null);
+
+        if (cursor2.moveToFirst()) {
+
+            total[1] = cursor2.getInt(cursor2.getColumnIndex("Total"));
+
+        }
+        return total;
+
+        }
+
+    public int[] cpspSales(String pname){
+        int[] cpsp = new int[2];
+        SQLiteDatabase DB = this.getReadableDatabase();
+
+        Cursor cursor1 = DB.rawQuery(
+                "SELECT cost_price as CP FROM Product where pname ='"+pname+"'", null);
+
+        if (cursor1.moveToFirst()) {
+
+            cpsp[0] = cursor1.getInt(cursor1.getColumnIndex("CP"));
+
+        }
+
+        Cursor cursor2 = DB.rawQuery(
+                "SELECT sell_price as SP FROM Product where pname ='"+pname+"'", null);
+
+        if (cursor2.moveToFirst()) {
+
+            cpsp[1] = cursor2.getInt(cursor2.getColumnIndex("SP"));
+
+        }
+        return cpsp;
+
+    }
+
+
 
 
 
