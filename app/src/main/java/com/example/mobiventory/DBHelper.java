@@ -1,6 +1,9 @@
 package com.example.mobiventory;
 
-import      android.content.ContentValues;
+import java.util.ArrayList;
+import java.util.List;
+
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -8,8 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class DBHelper extends SQLiteOpenHelper {
     public DBHelper(Context context) {
@@ -19,7 +21,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase DB) {
-        DB.execSQL("create table Catagory(catagory TEXT)");
+        DB.execSQL("create table Catagory(name TEXT)");
         DB.execSQL("create table Product(pname TEXT primary key, mname TEXT,quantity TEXT ,cost_price TEXT,sell_price TEXT)");
     }
 
@@ -34,7 +36,7 @@ public class DBHelper extends SQLiteOpenHelper {
     {
         SQLiteDatabase DB = this.getWritableDatabase();
         ContentValues contentValues= new ContentValues();
-        contentValues.put("catagory",catagory);
+        contentValues.put("name",catagory);
         long result=DB.insert("Catagory",null,contentValues);
         if (result==-1){
             return false;
@@ -63,20 +65,23 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
+    public Cursor viewProduct() {
+        SQLiteDatabase DB = this.getReadableDatabase();
+        String query = "Select * from Product";
+        Cursor cursor = DB.rawQuery(query, null);
+        return cursor;
+    }
 
-    public List<String> getAllLabels(){
-        List<String> labels = new ArrayList<String>();
+    public List<String> getAllProjects(){
+        List<String> projects = new ArrayList<String>();
 
-        // Select All Query
-        String selectQuery = "SELECT  * FROM Catagory";
+        String selectQuery = "SELECT * FROM Catagory";
 
         SQLiteDatabase db = this.getReadableDatabase();
-            Cursor cursor = db.rawQuery(selectQuery, null);
-
-        // looping through all rows and adding to list
+        Cursor cursor = db.rawQuery(selectQuery,null);
         if (cursor.moveToFirst()) {
             do {
-                labels.add(cursor.getString(1));
+                projects.add(cursor.getString(0));
             } while (cursor.moveToNext());
         }
 
@@ -85,6 +90,9 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
 
         // returning lables
-        return labels;
+        return projects;
     }
+
+
+
 }

@@ -2,10 +2,12 @@ package com.example.mobiventory;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -29,13 +31,11 @@ public class add_product extends AppCompatActivity {
         quantity =findViewById(R.id.quantity);
         cost_price =findViewById(R.id.cost_price);
         sell_price =findViewById(R.id.sell_price);
-        category = findViewById(R.id.categoryDD);
+        category= findViewById(R.id.categoryDD);
         Add=findViewById(R.id.Add);
         DB = new DBHelper(this);
 
-        //category.setOnItemSelectedListener(this);
-
-       // loadSpinnerData();
+        loadSpinnerData();
 
 
         Add.setOnClickListener(new View.OnClickListener() {
@@ -61,24 +61,23 @@ public class add_product extends AppCompatActivity {
         
     }
 
-//    private void loadSpinnerData() {
-//        // database handler
-//      //  DatabaseHandler db = new DatabaseHandler(getApplicationContext());
-//
-//        // Spinner Drop down elements
-//        List<String> lables = DB.getAllLabels();
-//
-//        // Creating adapter for spinner
-//        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-//                android.R.layout.simple_spinner_item, lables);
-//
-//        // Drop down layout style - list view with radio button
-//        dataAdapter
-//                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//
-//        // attaching data adapter to spinner
-//        category.setAdapter(dataAdapter);
-//    }
+    private void loadSpinnerData() {
+        // database handler
+        DBHelper db = new DBHelper (getApplicationContext());
 
+        // Spinner Drop down elements
+        List<String> projects = db.getAllProjects();
+
+        // Creating adapter for spinner
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, projects);
+
+        // Drop down layout style - list view with radio button
+        dataAdapter
+                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        category.setAdapter(dataAdapter);
+    }
 
 }
