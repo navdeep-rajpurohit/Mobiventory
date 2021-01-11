@@ -8,14 +8,18 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.SimpleCursorAdapter;
 
 import androidx.annotation.Nullable;
 
 
 
 public class DBHelper extends SQLiteOpenHelper {
+    Context context;
     public DBHelper(Context context) {
         super(context, "Userdata.db", null, 1);
+        this.context = context;
+
 
     }
 
@@ -67,12 +71,15 @@ public class DBHelper extends SQLiteOpenHelper {
         public Boolean addsales(String cname, String price,String cPrice, String product)
         {
             SQLiteDatabase DB = this.getWritableDatabase();
+            SQLiteDatabase db = this.getReadableDatabase();
             ContentValues contentValues= new ContentValues();
             contentValues.put("cname",cname);
             contentValues.put("price",price);
             contentValues.put("cPrice",cPrice);
             contentValues.put("product",product);
             long result=DB.insert("Sales",null,contentValues);
+            String decrementquery = "UPDATE Product SET quantity = quantity-1 WHERE pname = '"+product+"'";
+            DB.execSQL(decrementquery);
             if (result==-1){
                 return false;
             }else {
@@ -81,16 +88,10 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
 
+
         }
 
-    public Cursor viewProduct() {
-        SQLiteDatabase DB = this.getReadableDatabase();
-        String query = "Select * from Product";
-        Cursor cursor = DB.rawQuery(query, null);
-        return cursor;
-    }
-
-    public List<String> getAllCategory(){
+        public List<String> getAllCategory(){
         List<String> projects = new ArrayList<String>();
 
         String selectQuery = "SELECT * FROM Catagory";
@@ -182,7 +183,18 @@ public class DBHelper extends SQLiteOpenHelper {
         return cpsp;
 
     }
-
+    public Cursor viewProduct() {
+        SQLiteDatabase DB = this.getReadableDatabase();
+        String query = "Select * from Product";
+        Cursor cursor = DB.rawQuery(query, null);
+        return cursor;
+    }
+    public Cursor viewSales() {
+        SQLiteDatabase DB = this.getReadableDatabase();
+        String query = "Select * from Sales";
+        Cursor cursor = DB.rawQuery(query, null);
+        return cursor;
+    }
 
 
 

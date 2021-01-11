@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,7 +20,7 @@ public class search extends Activity {
 
     DBHelper db;
     ArrayList<String> listItem;
-    ListView productList;
+    ListView stock;
     ArrayAdapter adapter;
 
     @Override
@@ -28,13 +30,13 @@ public class search extends Activity {
 
         db = new DBHelper(this);
         listItem = new ArrayList<>();
-        productList = findViewById(R.id.productList);
+        stock = findViewById(R.id.stockLV);
         viewProduct();
 
-        productList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        stock.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String text = productList.getItemAtPosition(1).toString();
+                String text = stock.getItemAtPosition(1).toString();
                 Toast.makeText(search.this, ""+text,Toast.LENGTH_SHORT).show();
 
             }
@@ -48,14 +50,19 @@ public class search extends Activity {
         {
             Toast.makeText(this, "No Data", Toast.LENGTH_SHORT).show();
         }else
+
             while (cursor.moveToNext()){
-                listItem.add(cursor.getString(1));
+                listItem.add("Model");
+                listItem.add(cursor.getString(0));
+                listItem.add("Quantity");
                 listItem.add(cursor.getString(2));
+                listItem.add("Price");
                 listItem.add(cursor.getString(3));
 
+
             }
-            adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1,listItem);
-            productList.setAdapter(adapter);
+        adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1,listItem);
+        stock.setAdapter(adapter);
 
 
     }
